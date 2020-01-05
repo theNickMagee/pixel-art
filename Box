@@ -1,0 +1,47 @@
+ class Box {
+  int x, y, w, c;
+  boolean debug;
+   Box ( int x, int y, int w){
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    colorMode(RGB);
+    this.c = color(250, 250, 250, 1);
+    this.debug = debug;
+  }
+  
+
+  
+  void display(){
+   fill(this.c);
+   if (debug){
+     strokeWeight(1);
+   }else {
+     noStroke();
+   }
+   rect(x, y, w, w);
+   sketchimage.img.loadPixels();
+    for (int i = x-500; i < x+w-500; i++) {
+      for (int j = y; j < y+w; j++) {
+      sketchimage.img.set(i, j,this.c); 
+      }
+    }
+   sketchimage.img.updatePixels();
+   //not part of display but im lazy this is color picker pt 2
+   if (mousePressed && mouseX > 500 && mouseX > 0 && mouseY > 0 && mouseY < 1600){
+     
+   }
+  }
+  
+  void load(){
+    //loadImage.resize(2100, 1600);
+    if (imageindex %2 == 0){
+    this.c = loadImage2.get(x-500+5, y+5);
+    }else{
+    this.c = loadImage.get(x-500+5, y+5);
+    }
+    println("load");
+  }
+
+ 
+}
