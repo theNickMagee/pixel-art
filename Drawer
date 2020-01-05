@@ -1,0 +1,45 @@
+class Drawer{
+  Box selected;
+  int i;
+   Drawer ( int i){
+    this.i = i;
+    this.selected = boxes.get(this.i);
+  }
+  
+
+  
+  void display(){
+   strokeWeight(4);
+   fill(c);
+   rect(selected.x, selected.y, selected.w, selected.w);
+  }
+  
+  void move (char d){
+    if (d == 'l') {
+      this.selected = boxes.get(this.i - 80);
+      this.i -=80; //80 - small 40 big
+    } else if (d == 'r') {
+      this.selected = boxes.get(this.i + 80);
+      this.i +=80; //80 small
+    } 
+    else if (d == 'u') {
+      this.selected = boxes.get(this.i - 1);
+      this.i -=1;
+    } 
+    else if (d == 'd') {
+      this.selected = boxes.get(this.i + 1);
+      this.i += 1;
+    } 
+  }
+  void phil(int c){
+    this.selected.c = c;
+  }
+
+  void phil2(int c){
+    this.selected.c = c;
+    boxes.get(this.i+1).c = c;
+    boxes.get(this.i+2).c = c;
+    boxes.get(this.i+3).c = c;
+   // boxes.get(this.i+).c = c;
+  }
+}
