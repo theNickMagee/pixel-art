@@ -1,0 +1,24 @@
+class SketchImg {
+  int x, y, w, h;
+  PImage img;
+   SketchImg ( int x, int y, int w, int h){
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    img = new PImage(w, h);
+  }
+    public void render (){
+    image( img, x, y );
+    if( mousePressed &&
+  mouseX >= x && 
+  mouseX < x + w &&
+  mouseY >= y &&
+  mouseY < y + h)
+    {
+      c = img.get( mouseX, mouseY );
+    }
+    
+  }
+  
+ }
