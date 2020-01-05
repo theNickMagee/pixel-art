@@ -1,0 +1,232 @@
+ColorPicker cp;
+SketchImg sketchimage;
+PImage loadImage;
+PImage loadImage2;
+PImage saveImage;
+PImage plane;
+PImage pic2;
+ArrayList<Box> boxes;
+int boxi = 0;
+int imageindex;
+Drawer drawer;
+int c = 0;
+int planex;
+int planey;
+int pic2x;
+int pic2y;
+int pic2w;
+int pic2h;
+int planesize;
+boolean pic2edit = false;
+boolean debug = true;
+boolean draw = true;
+
+
+
+
+void setup() {
+  size(2100, 1600);
+  background(250);
+  //frameRate(100);
+ imageindex = 0;
+  planex = 1020;
+  planey = 880;
+  
+  pic2x = 1000;
+  pic2y = 800;
+  pic2w = 448;
+  pic2h = 776;
+  cp = new ColorPicker( 10, 10, 400, 400, 255 );
+  boxes = new ArrayList<Box>();
+  loadImage = loadImage("image0.png");
+  loadImage2 = loadImage("image0.png");
+  loadImage.resize(1600, 1600);
+  loadImage2.resize(1600, 1600);
+  plane = loadImage("carback.png");
+  planesize = plane.width;
+  pic2 = loadImage("girl.png");
+  sketchimage = new SketchImg(500, 0, 1600, 1600);
+ 
+  PImage saveImage = createImage(1600, 1600, RGB);
+  for (int x = 500; x < 2100; x+= 20){//20 40
+    for (int y = 0; y < 1600; y+= 20){
+      boxes.add(new Box(x, y, 20));
+    }
+  }
+  
+  drawer = new Drawer(0);
+}
+
+void draw (){
+  background(250);
+  
+  stroke(0);
+  line(500, 0, 500, height);
+  cp.render();
+  sketchimage.render();
+  c = cp.pick();
+  for (Box b : boxes) {
+    b.display();
+    b.debug = debug;
+  }
+  drawer.display();
+  if (!draw){
+  plane.resize(planesize, planesize);
+  image(plane, planex, planey);
+  if (pic2edit){
+  pic2.resize(pic2w, pic2h);
+  image(pic2, pic2x, pic2y);
+  }
+  }
+  //loadImage.resize(1600, 1600);
+  //image(loadImage, 0, 0);
+}
+
+void keyPressed() {
+  if (key == 'q'){
+    imageindex --;
+  }
+  if (key == 'd'){
+    draw = !draw;
+  }
+  if (key == 'e'){
+    pic2edit = !pic2edit;
+  }
+  if (key == CODED) {
+    if (keyCode == UP) {
+      if (draw){
+        drawer.move('u');
+      } else{
+          if (!pic2edit){
+            planey -= 10;
+            }else{
+          pic2y-=10;
+        }
+        }
+    } else if (keyCode == DOWN) {
+      if (draw){
+        drawer.move('d');
+      }else{
+        if (!pic2edit){
+        planey+=10;
+        }else{
+          pic2y +=10;
+        }
+      }
+    } 
+    else if (keyCode == LEFT) {
+      if (draw){
+        drawer.move('l');
+      }else{
+        if (!pic2edit){
+           planex -=10;
+        }else{
+          pic2x -= 10;
+        }
+      }
+    } 
+    else if (keyCode == RIGHT) {
+      if (draw){
+        drawer.move('r');
+      } else{
+        if (!pic2edit){
+       planex+=10;
+        }else{
+        pic2x +=10;
+        }
+      }
+    } else if (keyCode == SHIFT){
+      if (draw){
+        drawer.phil(c);
+      }else{
+        if (!pic2edit){
+        planesize+=10;
+        }else{
+          pic2w *=1.05;
+          pic2h *=1.05;
+        }
+      }
+    }
+  }
+  if (key == 'z'){
+    //if (!draw){
+    //  if (!pic2edit){
+    //  planesize-=10;
+    //  }else{
+    //    pic2w /=1.05;
+    //    pic2h /=1.05;
+    //  }
+    //}
+    debug = !debug;
+    println(debug);
+  }
+  if (key == 'j'){
+    //for (int i = drawer.selected; i < boxes.size()-1; i++){
+    //  if (boxes.get(i-1).c == c){
+    //  if (boxes.get(i-1).c == boxes.get(i+1).c){
+       
+    //      boxes.get(i).c = boxes.get(i+1).c;p
+        
+    //  }
+    // }
+    //}
+  }
+  if (key == 'p'){
+    for (Box b : boxes) {
+      b.load();
+     }
+  }
+  if (key == 's'){
+    
+    saveImage = sketchimage.img.get();
+    //if (!draw){
+    //saveImage.blend(plane, 0, 0, 1700, 1700, planex-500, planey,planesize, planesize, BLEND);
+    //if (pic2edit){
+    //  saveImage.blend(pic2, 0, 0, 448, 776, pic2x-500, pic2y,pic2w, pic2h, BLEND);
+    //}
+    //}
+    
+    saveImage.resize(sketchimage.img.width + 100, sketchimage.img.height + 100);
+    
+
+    saveImage.save(dataPath("image" + imageindex + ".png"));//"image" + imageindex + ".png"
+    println("saved");
+    imageindex+=1;
+    //for (Box b : boxes) {
+    //  b.load();
+    // }
+  }
+}
+void mousePressed(){
+  if (mouseX > 500){
+    getBox(mouseX, mouseY);
+    println("mouse");
+  }
+}
+void mouseDragged(){
+  getBox2(mouseX, mouseY);
+  drawer.phil(c);
+}
+void getBox(float x, float y){
+    for (int i = 0; i < boxes.size(); i++){
+      if(boxes.get(i).x < x && boxes.get(i).x + boxes.get(i).w > x){
+        if(boxes.get(i).y < y && boxes.get(i).y + boxes.get(i).w > y){
+          cp.c = boxes.get(i).c;
+      }
+      }
+    
+    }
+  
+  }
+  
+ void getBox2(float x, float y){
+    for (int i = 0; i < boxes.size(); i++){      if(boxes.get(i).x < x && boxes.get(i).x + boxes.get(i).w > x){
+        if(boxes.get(i).y < y && boxes.get(i).y + boxes.get(i).w > y){
+          drawer.selected = boxes.get(i);
+      }
+      }
+    
+    }
+  
+  }
+  
